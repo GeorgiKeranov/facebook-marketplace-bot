@@ -11,8 +11,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 class Scraper:
-	# This delay is used when we are waiting for element to get loaded in the html
-	find_element_delay = 20
+	# This time is used when we are waiting for element to get loaded in the html
+	wait_element_time = 20
 
 	# In this folder we will save cookies from logged in users
 	cookies_folder = 'cookies' + os.path.sep
@@ -38,15 +38,16 @@ class Scraper:
 			'--disable-blink-features=AutomationControlled',
 		]
 
-		experimental_options = [
-			{'key': 'excludeSwitches', 'value': ['enable-automation', 'enable-logging']},
-		]
+		experimental_options = {
+			'excludeSwitches': ['enable-automation', 'enable-logging'],
+			'prefs': {'profile.default_content_setting_values.notifications': 2}
+		}
 
 		for argument in arguments:
 			self.driver_options.add_argument(argument)
 
-		for experimental_option in experimental_options:
-			self.driver_options.add_experimental_option(experimental_option['key'], experimental_option['value'])
+		for key, value in experimental_options.items():
+			self.driver_options.add_experimental_option(key, value)
 
 	# Setup chrome driver with predefined options
 	def setup_driver(self):
@@ -54,31 +55,39 @@ class Scraper:
 		self.driver.get(self.url)
 
 	# Add login functionality and load cookies if there are any with 'cookies_file_name'
-	def add_login_functionality(self, login_url, username_selector, password_selector, remember_checkbox_selector, login_button_selector, is_logged_in_selector, cookies_file_name):
+	def add_login_functionality(self, login_url, is_logged_in_selector, cookies_file_name):
 		self.login_url = login_url
-		self.username_selector = username_selector
-		self.password_selector = password_selector
-		self.remember_checkbox_selector = remember_checkbox_selector
-		self.login_button_selector = login_button_selector
 		self.is_logged_in_selector = is_logged_in_selector
 		self.cookies_file_name = cookies_file_name + '.pkl'
 		self.cookies_file_path = self.cookies_folder + self.cookies_file_name
 
-		self.load_cookies()
+		# Check if there is a cookie file saved
+		if self.is_cookie_file():
+			# Load cookies
+			self.load_cookies()
+			
+			# Check if user is logged in after adding the cookies
+			is_logged_in = self.is_logged_in(5)
+			if is_logged_in:
+				return
+		
+		# Wait for the user to log in with maximum amount of time 5 minutes
+		print('Please login manually in the browser and after that you will be automatically loged in with cookies. Note that if you do not log in for five minutes, the program will turn off.')
+		is_logged_in = self.is_logged_in(300)
 
-		# If is_logged_in_selector is not found try to login the user again
-		if not self.find_element(is_logged_in_selector, False, 5):
-			self.login()
+		# User is not logged in so exit from the program
+		if not is_logged_in:
+			exit()
 
-		print("\nLogin is successful!")
+		# User is logged in so save the cookies
+		self.save_cookies()
+
+	# Check if cookie file exists
+	def is_cookie_file(self):
+		return os.path.exists(self.cookies_file_path)
 
 	# Load cookies from file
 	def load_cookies(self):
-		# If there is no file or folder with cookies go to the login page and ask for credentials
-		if not os.path.exists(self.cookies_file_path):
-			self.login()
-			return
-		
 		# Load cookies from the file
 		cookies_file = open(self.cookies_file_path, 'rb')
 		cookies = pickle.load(cookies_file)
@@ -113,37 +122,12 @@ class Scraper:
 
 		cookies_file.close()
 
-	# Go to login page and asks for credentials to log in the user then saves the cookies
-	def login(self, go_to_login_page = True):
-		# Go to login page
-		if (self.url is not self.login_url) and go_to_login_page:
-			self.go_to_page(self.login_url)
+	# Check if user is logged in based on a html element that is visible only for logged in users
+	def is_logged_in(self, wait_element_time = None):
+		if wait_element_time is None:
+			wait_element_time = self.wait_element_time
 
-		# Ask for username in the terminal for secure reasons
-		username = getpass.getpass('Username: ')
-		self.element_clear(self.username_selector, False)
-		self.element_send_keys(self.username_selector, username, False)
-		
-		# Ask for password in the terminal for secure reasons
-		password = getpass.getpass()
-		self.element_clear(self.password_selector, False)
-		self.element_send_keys(self.password_selector, password, False)	
-		
-		if self.remember_checkbox_selector:
-			self.element_click(self.remember_checkbox_selector)
-		
-		self.element_click(self.login_button_selector)
-
-		# Wait some time after clicking the login button
-		time.sleep(5)
-
-		# Login is not successful so call the function again
-		if not self.find_element(self.is_logged_in_selector, False, 5):
-			print("\nWrong credentials, please check your username and password then try again!")
-			self.login(False)
-
-		# Login is successful so save the cookies
-		self.save_cookies()
+		return self.find_element(self.is_logged_in_selector, False, wait_element_time)
 
 	# Wait random amount of seconds before taking some action so the server won't be able to tell if you are a bot
 	def wait_random_time(self):
@@ -159,18 +143,16 @@ class Scraper:
 		# Refresh the site url with the loaded cookies so the user will be logged in
 		self.driver.get(page)
 
-	def find_element(self, selector, exit_on_missing_element = True, custom_find_element_delay = False):
-		# Initialize wait dealy
-		wait_delay = self.find_element_delay
-		if custom_find_element_delay:
-			wait_delay = custom_find_element_delay
+	def find_element(self, selector, exit_on_missing_element = True, wait_element_time = None):
+		if wait_element_time is None:
+			wait_element_time = self.wait_element_time
 
 		# Intialize the condition to wait
 		wait_until = EC.element_to_be_clickable((By.CSS_SELECTOR, selector))
 
 		try:
 			# Wait for element to load
-			element = WebDriverWait(self.driver, wait_delay).until(wait_until)
+			element = WebDriverWait(self.driver, wait_element_time).until(wait_until)
 		except TimeoutException:
 			if exit_on_missing_element:
 				print(f'ERROR: Timed out waiting for the element with css selector "{selector}" to load')
