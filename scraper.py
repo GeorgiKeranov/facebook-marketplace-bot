@@ -148,7 +148,7 @@ class Scraper:
 			wait_element_time = self.wait_element_time
 
 		# Intialize the condition to wait
-		wait_until = EC.element_to_be_clickable((By.CSS_SELECTOR, selector))
+		wait_until = EC.presence_of_element_located((By.CSS_SELECTOR, selector))
 
 		try:
 			# Wait for element to load
@@ -165,7 +165,7 @@ class Scraper:
 
 	def find_element_by_xpath(self, xpath):
 		# Intialize the condition to wait
-		wait_until = EC.element_to_be_clickable((By.XPATH, xpath))
+		wait_until = EC.presence_of_element_located((By.XPATH, xpath))
 
 		try:
 			# Wait for element to load
