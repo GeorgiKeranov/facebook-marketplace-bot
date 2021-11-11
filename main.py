@@ -8,7 +8,7 @@ scraper.add_login_functionality('https://facebook.com', 'a[href="/me/"]', 'faceb
 
 # Go to the create new listing page
 scraper.element_click('a[href="https://www.facebook.com/marketplace/?ref=bookmark"]')
-scraper.element_click('a[aria-label="Create new listing"]')
+scraper.element_click('div[aria-label="Marketplace sidebar"] a[aria-label="Create new listing"]')
 
 # Choose listing type - Vehicle
 scraper.element_click('a[href="/marketplace/create/vehicle/"]')
@@ -17,6 +17,9 @@ scraper.element_click('a[href="/marketplace/create/vehicle/"]')
 scraper.element_click('label[aria-label="Vehicle type"]')
 # Select vehicle type
 scraper.element_click_by_xpath('//span[text()="Motorcycle"]')
+
+# Add images to the the listing
+scraper.element_send_keys('input[accept="image/*,image/heif,image/heic"]', "F:\Pictures and Videos\Ads\Мотори\CRF450R\With Label\IMG_3144.jpg \n F:\Pictures and Videos\Ads\Мотори\CRF450R\With Label\IMG_3147.jpg")
 
 # Expand years select
 scraper.element_click('label[aria-label="Year"]')
@@ -55,3 +58,14 @@ scraper.element_click_by_xpath('//span[text()="Gasoline"]')
 scraper.element_click('label[aria-label="Description"] textarea')
 # Type description
 scraper.element_send_keys('label[aria-label="Description"] textarea', 'Моторът се продава само на части!')
+
+# Go to the next step
+scraper.element_click('div [aria-label="Next"] > div')
+
+# List in groups
+scraper.element_click_by_xpath('//span[text()="МОТО ПАЗАР ( МОТОРИ ЕКИПИРОВКА ЧАСТИ АКСЕСОАРИ )"]')
+
+# Publish the listing
+scraper.element_click_by_xpath('//span[text()="Publish"]')
+
+time.sleep(300)
