@@ -10,4 +10,48 @@ scraper.add_login_functionality('https://facebook.com', 'a[href="/me/"]', 'faceb
 scraper.element_click('a[href="https://www.facebook.com/marketplace/?ref=bookmark"]')
 scraper.element_click('a[aria-label="Create new listing"]')
 
-time.sleep(5)
+# Choose listing type - Vehicle
+scraper.element_click('a[href="/marketplace/create/vehicle/"]')
+
+# Expand vehicle type select
+scraper.element_click('label[aria-label="Vehicle type"]')
+# Select vehicle type
+scraper.element_click_by_xpath('//span[text()="Motorcycle"]')
+
+# Expand years select
+scraper.element_click('label[aria-label="Year"]')
+# Select year
+scraper.element_click_by_xpath('//span[text()="2003"]')
+
+# Click on the make input
+scraper.element_click('label[aria-label="Make"] input')
+# Type make
+scraper.element_send_keys('label[aria-label="Make"] input', 'Honda')
+
+# Click on the model input
+scraper.element_click('label[aria-label="Model"] input')
+# Type model
+scraper.element_send_keys('label[aria-label="Model"] input', 'CRF450R На Части')
+
+# Click on the mileage input
+scraper.element_click('label[aria-label="Mileage"] input')
+# Type mileage
+scraper.element_send_keys('label[aria-label="Mileage"] input', '1234')
+
+# Scroll to the other fields
+scraper.driver.execute_script("""var scrollDiv = document.querySelector('div[role="main"] > div:first-child > div:nth-child(4)'); scrollDiv.scrollTop = 850;""")
+
+# Click on the price input
+scraper.element_click('label[aria-label="Price"] input')
+# Type price
+scraper.element_send_keys('label[aria-label="Price"] input', '1000')
+
+# Expand fuel type select
+scraper.element_click('label[aria-label="Fuel type"]')
+# Select fuel type
+scraper.element_click_by_xpath('//span[text()="Gasoline"]')
+
+# Click on the description textarea
+scraper.element_click('label[aria-label="Description"] textarea')
+# Type description
+scraper.element_send_keys('label[aria-label="Description"] textarea', 'Моторът се продава само на части!')
