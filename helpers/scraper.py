@@ -5,10 +5,11 @@ import getpass
 import random
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import InvalidArgumentException
 
 class Scraper:
 	# This time is used when we are waiting for element to get loaded in the html
@@ -148,7 +149,7 @@ class Scraper:
 			wait_element_time = self.wait_element_time
 
 		# Intialize the condition to wait
-		wait_until = EC.presence_of_element_located((By.CSS_SELECTOR, selector))
+		wait_until = EC.element_to_be_clickable((By.CSS_SELECTOR, selector))
 
 		try:
 			# Wait for element to load
@@ -165,7 +166,7 @@ class Scraper:
 
 	def find_element_by_xpath(self, xpath):
 		# Intialize the condition to wait
-		wait_until = EC.presence_of_element_located((By.XPATH, xpath))
+		wait_until = EC.element_to_be_clickable((By.XPATH, xpath))
 
 		try:
 			# Wait for element to load
@@ -203,6 +204,26 @@ class Scraper:
 		element = self.find_element(selector)
 
 		element.send_keys(text)
+
+	def input_file_add_files(self, selector, files):
+		# Intialize the condition to wait
+		wait_until = EC.presence_of_element_located((By.CSS_SELECTOR, selector))
+
+		try:
+			# Wait for input_file to load
+			input_file = WebDriverWait(self.driver, self.wait_element_time).until(wait_until)
+		except TimeoutException:
+			print(f'ERROR: Timed out waiting for the input_file with selector "{selector}" to load')
+			# End the program execution because we cannot find the input_file
+			exit()
+
+		self.wait_random_time()
+
+		try:
+			input_file.send_keys(files)
+		except InvalidArgumentException:
+			print('ERROR: Exiting from the program! Please check if these file paths are correct:\n' + files)
+			exit()
 
 	# Wait random time before clearing the element
 	def element_clear(self, selector, delay = True):
