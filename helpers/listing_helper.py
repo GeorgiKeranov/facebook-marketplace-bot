@@ -1,13 +1,25 @@
+def remove_listing(data, listing_type, scraper):
+	title = generate_title_for_listing_type(data, listing_type)
+
+	# Search for the listing by the title
+	listing_title = scraper.find_element_by_xpath('//span[text()="' + title + '"]', False)
+
+	# Listing not found so stop the function
+	if not listing_title:
+		return
+
+	listing_title.click()
+
+	# Click on the delete listing button
+	scraper.element_click('div[aria-label="Delete"]')
+
+	# Click on confirm button to delete
+	scraper.element_click('div[aria-label="Delete Listing"] div[aria-label="Delete"][tabindex="0"]')
+
+	# Wait until the popup is closed
+	scraper.element_wait_to_be_invisible('div[aria-label="Your Listing"]')
+
 def publish_listing(data, listing_type, scraper):
-	allowed_listing_types = [
-		'item',
-		'vehicle'
-	]
-
-	if not listing_type in allowed_listing_types:
-		print('Listing type "' + listing_type + '" is not allowed! Exiting from the program.')
-		exit()
-
 	# Click on create new listing button
 	scraper.element_click('div[aria-label="Marketplace sidebar"] a[aria-label="Create new listing"]')
 
@@ -128,3 +140,14 @@ def add_fields_for_item(data, scraper):
 	scraper.element_click('label[aria-label="Brand"] input')
 	# Type brand
 	scraper.element_send_keys('label[aria-label="Brand"] input', data['Brand'])
+
+def generate_title_for_listing_type(data, listing_type):
+	title = ''
+
+	if listing_type == 'item':
+		title = data['Title']
+
+	if listing_type == 'vehicle':
+		title = data['Year'] + ' ' + data['Make'] + ' ' + data['Model']
+
+	return title
