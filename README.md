@@ -7,7 +7,6 @@ Facebook marketplace bot that automatically removes and then uploads listings fr
 - [Functionalities](#functionalities)
 - [Installation](#installation)
 - [How to Use](#how-to-use)
-- [Examples of Analyzed Data - 11.08.2021](#examples-of-analyzed-data-11082021)
 
 ## Technologies Used
 - Python
