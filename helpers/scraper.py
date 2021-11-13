@@ -164,17 +164,23 @@ class Scraper:
 
 		return element
 
-	def find_element_by_xpath(self, xpath):
+	def find_element_by_xpath(self, xpath, exit_on_missing_element = True, wait_element_time = None):
+		if wait_element_time is None:
+			wait_element_time = self.wait_element_time
+
 		# Intialize the condition to wait
 		wait_until = EC.element_to_be_clickable((By.XPATH, xpath))
 
 		try:
 			# Wait for element to load
-			element = WebDriverWait(self.driver, self.wait_element_time).until(wait_until)
+			element = WebDriverWait(self.driver, wait_element_time).until(wait_until)
 		except TimeoutException:
-			print(f'ERROR: Timed out waiting for the element with xpath "{xpath}" to load')
-			# End the program execution because we cannot find the element
-			exit()
+			if exit_on_missing_element:
+				# End the program execution because we cannot find the element
+				print(f'ERROR: Timed out waiting for the element with xpath "{xpath}" to load')
+				exit()
+			else:
+				return False
 
 		return element
 
@@ -233,3 +239,11 @@ class Scraper:
 		element = self.find_element(selector)
 
 		element.clear()
+
+	def element_wait_to_be_invisible(self, selector):
+		wait_until = EC.invisibility_of_element_located((By.CSS_SELECTOR, selector))
+
+		try:
+			WebDriverWait(self.driver, self.wait_element_time).until(wait_until)
+		except:
+			print(f'Error waiting the element with selector "{selector}" to be invisible')
