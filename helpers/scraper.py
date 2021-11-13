@@ -132,7 +132,7 @@ class Scraper:
 
 	# Wait random amount of seconds before taking some action so the server won't be able to tell if you are a bot
 	def wait_random_time(self):
-		random_sleep_seconds = round(random.uniform(2.00, 4.00), 2)
+		random_sleep_seconds = round(random.uniform(0.20, 1.20), 2)
 
 		time.sleep(random_sleep_seconds)
 
