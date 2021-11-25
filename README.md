@@ -1,6 +1,6 @@
 # Facebook Marketplace Bot
 
-Facebook marketplace bot that automatically removes and then uploads listings from CSV Files. You can define all of the information about the items and vehicles that will be posted automatically so you will save time removing and publishing them every single time. We are doing this to show the listings on the top of marketplace or groups in order to be seen by more people.
+Facebook marketplace bot that automatically removes and then uploads listings from CSV Files. You can define all of the information about the items and vehicles that will be posted automatically so you will save time removing and publishing them every single time. We are doing this to show the listings on the top of marketplace or groups in order to be seen by more people and that leads to selling the items or vehicles faster.
 
 ## Table of Contents
 - [Technologies used](#technologies-used)
