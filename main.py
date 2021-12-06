@@ -33,7 +33,7 @@ scraper.element_click('a[href="https://www.facebook.com/marketplace/?ref=bookmar
 scraper.element_click('div[aria-label="Marketplace sidebar"] a[aria-label="Create new listing"]')
 
 # Click on Your Listings button
-scraper.element_click('a[href="/marketplace/you/selling/"]:not([aria-current="page"])')
+scraper.element_click('div[aria-label="Marketplace Composer"] a[href="/marketplace/you/selling/"]:not([aria-current="page"])')
 
 # Publish all the vehicles from csvs/items.csv into the facebook marketplace
 get_data_and_publish_listings('items', 'item', scraper)
