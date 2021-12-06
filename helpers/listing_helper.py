@@ -1,5 +1,10 @@
+import time
+
 def remove_listing(data, listing_type, scraper):
 	title = generate_title_for_listing_type(data, listing_type)
+
+	# Wait some time before searching for a listing_title in listings
+	time.sleep(5)
 
 	# Search for the listing by the title
 	listing_title = scraper.find_element_by_xpath('//span[text()="' + title + '"]', False)
