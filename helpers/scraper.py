@@ -13,7 +13,7 @@ from selenium.common.exceptions import InvalidArgumentException
 
 class Scraper:
 	# This time is used when we are waiting for element to get loaded in the html
-	wait_element_time = 20
+	wait_element_time = 30
 
 	# In this folder we will save cookies from logged in users
 	cookies_folder = 'cookies' + os.path.sep
