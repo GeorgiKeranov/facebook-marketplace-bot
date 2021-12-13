@@ -1,10 +1,8 @@
 import time
 
-def remove_listing(data, listing_type, scraper):
-	title = generate_title_for_listing_type(data, listing_type)
-
-	# Wait some time before searching for a listing_title in listings
-	time.sleep(5)
+def remove_listing(title, scraper):
+	# Wait until "Your Listings" page is loaded
+	scraper.find_element_by_xpath('//h1[text()="Your Listings"]')
 
 	# Search for the listing by the title
 	listing_title = scraper.find_element_by_xpath('//span[text()="' + title + '"]', False)
@@ -54,17 +52,6 @@ def publish_listing(data, listing_type, scraper):
 
 	# Go to the next step
 	scraper.element_click('div [aria-label="Next"] > div')
-
-	# Create an array for group names by spliting the string by this symbol ";"
-	group_names = data['Groups'].split(';')
-
-	# Post in different groups
-	if group_names:
-		for group_name in group_names:
-			# Remove whitespace before and after the name
-			group_name = group_name.strip()
-
-			scraper.element_click_by_xpath('//span[text()="' + group_name + '"]')
 
 	# Publish the listing
 	scraper.element_click_by_xpath('//span[text()="Publish"]')
@@ -141,10 +128,11 @@ def add_fields_for_item(data, scraper):
 	# Select category
 	scraper.element_click_by_xpath('//span[text()="' + data['Condition'] + '"]')
 
-	# Click on the brand input
-	scraper.element_click('label[aria-label="Brand"] input')
-	# Type brand
-	scraper.element_send_keys('label[aria-label="Brand"] input', data['Brand'])
+	if data['Category'] == 'Sports & Outdoors':
+		# Click on the brand input
+		scraper.element_click('label[aria-label="Brand"] input')
+		# Type brand
+		scraper.element_send_keys('label[aria-label="Brand"] input', data['Brand'])
 
 def generate_title_for_listing_type(data, listing_type):
 	title = ''
@@ -156,3 +144,40 @@ def generate_title_for_listing_type(data, listing_type):
 		title = data['Year'] + ' ' + data['Make'] + ' ' + data['Model']
 
 	return title
+
+def add_listing_to_multiple_groups(listing_title, groups, scraper):
+	# If the groups are empty do not do nothing
+	if not groups:
+		return
+
+	# Wait until "Your Listings" page is loaded
+	scraper.find_element_by_xpath('//h1[text()="Your Listings"]')
+
+	# Click on the title of the listing
+	scraper.element_click_by_xpath('//span[text()="' + listing_title + '"]')
+
+	# Click on the more button
+	scraper.element_click('div[aria-label="More"] > i')
+
+	# Get the "List in More Places" button
+	list_in_more_places_button = scraper.find_element_by_xpath('//span[text()="List in More Places"]', False)
+
+	# If the the "List in More Places" button is found list in all of the given groups
+	if list_in_more_places_button:
+		list_in_more_places_button.click()
+
+		# Create an array for group names by spliting the string by this symbol ";"
+		group_names = groups.split(';')
+		
+		# Post in different groups
+		for group_name in group_names:
+			# Remove whitespace before and after the name
+			group_name = group_name.strip()
+
+			scraper.element_click_by_xpath('//span[text()="' + group_name + '"]')
+
+		# Click on the 'Post' button
+		scraper.element_click('div[aria-label="Post"][tabindex="0"]')
+
+	# Click on the 'X' button to close the current listing window
+	scraper.element_click('div[aria-label="Your Listing"] div[aria-label="Close"]')

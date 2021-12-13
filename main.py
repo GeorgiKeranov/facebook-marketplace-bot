@@ -3,6 +3,8 @@ from helpers.scraper import Scraper
 from helpers.csv_helper import get_data_from_csv
 from helpers.listing_helper import remove_listing
 from helpers.listing_helper import publish_listing
+from helpers.listing_helper import generate_title_for_listing_type
+from helpers.listing_helper import add_listing_to_multiple_groups
 
 # Get data from csv then remove listings if already exist and finaly publish the listings into the facebook marketplace
 def get_data_and_publish_listings(file_name, listings_type, scraper):
@@ -15,11 +17,16 @@ def get_data_and_publish_listings(file_name, listings_type, scraper):
 
 	# Check if listing is already listed and remove it then publish it like a new one
 	for listing in listings:
+		listing_title = generate_title_for_listing_type(listing, listings_type)
+
 		# Remove listing if it is already published
-		remove_listing(listing, listings_type, scraper)
+		remove_listing(listing_title, scraper)
 
 		# Publish the listing in marketplace
 		publish_listing(listing, listings_type, scraper)
+
+		# Add the published listing in multiple groups
+		add_listing_to_multiple_groups(listing_title, listing['Groups'], scraper);
 
 scraper = Scraper('https://facebook.com')
 
