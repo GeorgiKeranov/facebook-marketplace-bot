@@ -26,7 +26,7 @@ def get_data_and_publish_listings(file_name, listings_type, scraper):
 		publish_listing(listing, listings_type, scraper)
 
 		# Add the published listing in multiple groups
-		add_listing_to_multiple_groups(listing_title, listing['Groups'], scraper);
+		add_listing_to_multiple_groups(listing_title, listing['Groups'], scraper)
 
 scraper = Scraper('https://facebook.com')
 
