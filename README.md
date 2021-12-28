@@ -31,6 +31,15 @@ Facebook marketplace bot that automatically removes and then uploads listings fr
       python -m pip install selenium
       python -m pip install pickle-mixin
       ```
+3. Install the "Google Chrome" browser if you don't have it already - https://www.google.com/chrome/.
+4. Download the "chromedriver" based on the "Google Chrome" version from here - https://chromedriver.chromium.org/downloads.
+5. After you have downloaded the "chromedriver.zip", you will have to unzip it.
+6. Make the unzipped file "chromedriver" to be accesible by copying it in the directory where you have cloned the project.
+7. If you want to hide "chromedriver" from websites that check for bots, you can do these steps:
+	- Open the "chromedriver.exe" or "chromedriver" using a Text editor. I would recommend [Notepad++](https://notepad-plus-plus.org/downloads/).
+	- Using Ctrl+F search for $cdc_asdjflasutopfhvcZLmcfl_. It's on line 24816 in my current Chrome driver, but it's probably on a different line in yours.
+	- Replace everything after the $ with something random of the very same length. E.g. $btlhsaxJbTXmBATUDvTRhvcZLm_ (Just Hammer on your keyboard a bit and make sure that the new string is of the same Length)
+	- Save this by pressing Ctrl+S. From now on, use this executable as your driver.
 
 ## How to Use
 1. Open folder where this project is saved on your local machine
