@@ -37,8 +37,8 @@ Facebook marketplace bot that automatically removes and then uploads listings fr
 6. Make the unzipped file "chromedriver" to be accesible by copying it in the directory where you have cloned the project.
 7. If you want to hide "chromedriver" from websites that check for bots, you can do these steps:
 	- Open the "chromedriver.exe" or "chromedriver" using a Text editor. I would recommend [Notepad++](https://notepad-plus-plus.org/downloads/).
-	- Using Ctrl+F search for "cdc_". It's on line 24816 in my current Chrome driver, but it's probably on a different line in yours.
-	- Replace it with something random of the very same length. E.g. "asd_" (Just Hammer on your keyboard a bit and make sure that the new string is of the same Length)
+	- Using Ctrl+F search for "cdc_". There will be multiple matches.
+	- Replace all of the matches with something random of the very same length. E.g. "asd_" (Just Hammer on your keyboard a bit and make sure that the new string is of the same Length)
 	- Save this by pressing Ctrl+S. From now on, use this executable as your driver.
 
 ## How to Use
