@@ -53,6 +53,8 @@ def publish_listing(data, listing_type, scraper):
 	# Go to the next step
 	scraper.element_click('div [aria-label="Next"] > div')
 
+	time.sleep(3)
+
 	# Publish the listing
 	scraper.element_click_by_xpath('//span[text()="Publish"]')
 
