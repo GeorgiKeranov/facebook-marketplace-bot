@@ -128,7 +128,7 @@ def add_fields_for_item(data, scraper):
 	# Expand category select
 	scraper.element_click('label[aria-label="Condition"]')
 	# Select category
-	scraper.element_click_by_xpath('//span[text()="' + data['Condition'] + '"]')
+	scraper.element_click_by_xpath('//span[@dir="auto"][text()="' + data['Condition'] + '"]')
 
 	if data['Category'] == 'Sports & Outdoors':
 		# Click on the brand input
