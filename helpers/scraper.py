@@ -10,6 +10,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import InvalidArgumentException
+from selenium.common.exceptions import ElementClickInterceptedException
 
 class Scraper:
 	# This time is used when we are waiting for element to get loaded in the html
@@ -191,7 +192,10 @@ class Scraper:
 
 		element = self.find_element(selector)
 
-		element.click()
+		try:
+			element.click()
+		except ElementClickInterceptedException:
+			self.driver.execute_script("arguments[0].click();", element)
 
 	# Wait random time before cliking on the element
 	def element_click_by_xpath(self, xpath, delay = True):
@@ -200,7 +204,11 @@ class Scraper:
 
 		element = self.find_element_by_xpath(xpath)
 
-		element.click()
+		try:
+			element.click()
+		except ElementClickInterceptedException:
+			self.driver.execute_script("arguments[0].click();", element)
+
 
 	# Wait random time before sending the keys to the element
 	def element_send_keys(self, selector, text, delay = True):
