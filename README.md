@@ -46,7 +46,7 @@ Facebook marketplace bot that automatically removes and then uploads listings fr
 2. Open the "csvs" folder
 3. Add items or vehicles in the "items.csv" and "vehicles.csv" files. You can open these files with programs like "Microsoft Excel", "LibreOffice Calc", etc
 4. Please note these things for the csv columns:
-	- "Photos Folder" column you will have to define only the folder path with ending separator for folders like this "C:\Pictures\" and not like "C:\Pictures"
+	- "Photos Folder" column you will have to define only the folder path with ending separator for folders like this "C:\Pictures\\" and not like "C:\Pictures"
 	- "Photos Names" column should only have the names of photos separated with this symbol ";" like this "Photo 1.JPG; Photo 2.png; Photo3.jpg"
 	- Marketplace fields that you have to select an option like "Category", "Condition", "Vehicle Type", "Fuel Type". You have to type the exact name of the option that you want to choose.
 	- "Groups" column can have multiple groups and you will have to type their exact name and separate them by this symbol ";". Example - "Group name 1; Group name 2; Group name"
