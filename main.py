@@ -47,6 +47,3 @@ get_data_and_publish_listings('items', 'item', scraper)
 
 # Publish all the vehicles from csvs/vehicles.csv into the facebook marketplace
 get_data_and_publish_listings('vehicles', 'vehicle', scraper)
-
-# Wait some time before closing the Chrome
-time.sleep(15)
