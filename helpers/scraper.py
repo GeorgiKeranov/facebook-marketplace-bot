@@ -219,6 +219,15 @@ class Scraper:
 
 		element.send_keys(text)
 
+	# Wait random time before sending the keys to the element
+	def element_send_keys_by_xpath(self, xpath, text, delay = True):
+		if delay:
+			self.wait_random_time()
+
+		element = self.find_element_by_xpath(xpath)
+
+		element.send_keys(text)
+
 	def input_file_add_files(self, selector, files):
 		# Intialize the condition to wait
 		wait_until = EC.presence_of_element_located((By.CSS_SELECTOR, selector))
