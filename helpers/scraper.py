@@ -217,6 +217,8 @@ class Scraper:
 
 		element = self.find_element(selector)
 
+		element.click()
+
 		element.send_keys(text)
 
 	# Wait random time before sending the keys to the element
@@ -226,6 +228,8 @@ class Scraper:
 
 		element = self.find_element_by_xpath(xpath)
 
+		element.click()
+		
 		element.send_keys(text)
 
 	def input_file_add_files(self, selector, files):
