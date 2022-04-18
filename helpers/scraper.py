@@ -101,8 +101,6 @@ class Scraper:
 
 		self.go_to_page(self.url)
 
-		time.sleep(5)
-
 	# Save cookies to file
 	def save_cookies(self):
 		# Do not save cookies if there is no cookies_file name 
