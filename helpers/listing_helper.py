@@ -1,8 +1,10 @@
 import time
 
 def remove_listing(title, scraper):
-	# Wait until "Your Listings" page is loaded
-	scraper.find_element_by_xpath('//h1[text()="Your Listings"]')
+	# Click on the "Search your listing" input
+	scraper.element_click('input[placeholder="Search your listings"]')
+	# Enter the title of the listing in the input for search
+	scraper.element_send_keys('input[placeholder="Search your listings"]', title)
 
 	# Search for the listing by the title
 	listing_title = scraper.find_element_by_xpath('//span[text()="' + title + '"]', False)
