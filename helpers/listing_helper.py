@@ -87,6 +87,8 @@ def add_fields_for_vehicle(data, scraper):
 	# Select vehicle type
 	scraper.element_click_by_xpath('//span[text()="' + data['Vehicle Type'] + '"]')
 
+	# Scroll to years select
+	scraper.scroll_to_element('label[aria-label="Year"]')
 	# Expand years select
 	scraper.element_click('label[aria-label="Year"]')
 	# Select year
@@ -102,13 +104,12 @@ def add_fields_for_vehicle(data, scraper):
 	# Type model
 	scraper.element_send_keys('label[aria-label="Model"] input', data['Model'])
 
+	# Scroll to mileage input
+	scraper.scroll_to_element('label[aria-label="Mileage"] input')	
 	# Click on the mileage input
 	scraper.element_click('label[aria-label="Mileage"] input')
 	# Type mileage
 	scraper.element_send_keys('label[aria-label="Mileage"] input', data['Mileage'])
-
-	# Scroll to the bottom fields
-	scraper.driver.execute_script("""var scrollDiv = document.querySelector('div[role="main"] > div:first-child > div:nth-child(4)'); scrollDiv.scrollTop = 850;""")
 
 	# Expand fuel type select
 	scraper.element_click('label[aria-label="Fuel type"]')
