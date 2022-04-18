@@ -1,24 +1,6 @@
 from helpers.scraper import Scraper
 from helpers.csv_helper import get_data_from_csv
-from helpers.listing_helper import remove_listing
-from helpers.listing_helper import publish_listing
-
-# Get data from csv then remove listings if already exist and finaly publish the listings into the facebook marketplace
-def get_data_and_publish_listings(file_name, listings_type, scraper):
-	# Get data from csv file
-	listings = get_data_from_csv(file_name)
-
-	# If data is empty stop the function
-	if not listings:
-		return
-
-	# Check if listing is already listed and remove it then publish it like a new one
-	for listing in listings:
-		# Remove listing if it is already published
-		remove_listing(listing, listings_type, scraper)
-
-		# Publish the listing in marketplace
-		publish_listing(listing, listings_type, scraper)
+from helpers.listing_helper import update_listings
 
 scraper = Scraper('https://facebook.com')
 
@@ -34,8 +16,12 @@ scraper.element_click('div[aria-label="Marketplace sidebar"] a[aria-label="Creat
 # Click on Your Listings button
 scraper.element_click('div[aria-label="Marketplace Composer"] a[href="/marketplace/you/selling/"]:not([aria-current="page"])')
 
-# Publish all the items from csvs/items.csv into the facebook marketplace
-get_data_and_publish_listings('items', 'item', scraper)
+# Get data for item type listings from csvs/items.csv
+item_listings = get_data_from_csv('items')
+# Publish all of the items into the facebook marketplace
+update_listings(item_listings, 'item', scraper)
 
-# Publish all the vehicles from csvs/vehicles.csv into the facebook marketplace
-get_data_and_publish_listings('vehicles', 'vehicle', scraper)
+# Get data for vechile type listings from csvs/vechiles.csv
+vehicle_listings = get_data_from_csv('vehicles')
+# Publish all of the vehicles into the facebook marketplace
+update_listings(vehicle_listings, 'vehicle', scraper)

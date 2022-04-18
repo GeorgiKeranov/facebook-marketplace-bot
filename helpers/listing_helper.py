@@ -1,3 +1,18 @@
+# Remove and then publish each listing
+def update_listings(listings, type, scraper):
+	# If listings are empty stop the function
+	if not listings:
+		return
+
+	# Check if listing is already listed and remove it then publish it like a new one
+	for listing in listings:
+		# Remove listing if it is already published
+		remove_listing(listing, type, scraper)
+
+		# Publish the listing in marketplace
+		publish_listing(listing, type, scraper)
+		break
+
 def remove_listing(data, listing_type, scraper):
 	title = generate_title_for_listing_type(data, listing_type)
 
