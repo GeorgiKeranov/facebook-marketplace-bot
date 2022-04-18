@@ -264,3 +264,13 @@ class Scraper:
 			WebDriverWait(self.driver, self.wait_element_time).until(wait_until)
 		except:
 			print('Error waiting the element with selector "' + selector + '" to be invisible')
+	
+	def scroll_to_element(self, selector):
+		element = self.find_element(selector)
+
+		self.driver.execute_script('arguments[0].scrollIntoView(true);', element)
+
+	def scroll_to_element_by_xpath(self, xpath):
+		element = self.find_element_by_xpath(xpath)
+
+		self.driver.execute_script('arguments[0].scrollIntoView(true);', element)
