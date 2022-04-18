@@ -122,6 +122,8 @@ def add_fields_for_item(data, scraper):
 	# Type title
 	scraper.element_send_keys('label[aria-label="Title"] input', data['Title'])
 
+	# Scroll to "Category" select field
+	scraper.scroll_to_element('label[aria-label="Category"]')
 	# Expand category select
 	scraper.element_click('label[aria-label="Category"]')
 	# Select category
