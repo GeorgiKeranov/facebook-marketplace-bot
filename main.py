@@ -15,7 +15,7 @@ def get_data_and_publish_listings(file_name, listings_type, scraper):
 	# Check if listing is already listed and remove it then publish it like a new one
 	for listing in listings:
 		# Remove listing if it is already published
-		remove_listing(listing, listing_type, scraper)
+		remove_listing(listing, listings_type, scraper)
 
 		# Publish the listing in marketplace
 		publish_listing(listing, listings_type, scraper)
