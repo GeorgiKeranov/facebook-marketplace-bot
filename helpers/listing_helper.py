@@ -11,7 +11,6 @@ def update_listings(listings, type, scraper):
 
 		# Publish the listing in marketplace
 		publish_listing(listing, type, scraper)
-		break
 
 def remove_listing(data, listing_type, scraper):
 	title = generate_title_for_listing_type(data, listing_type)
