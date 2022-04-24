@@ -215,7 +215,10 @@ class Scraper:
 
 		element = self.find_element(selector)
 
-		element.click()
+		try:
+			element.click()
+		except ElementClickInterceptedException:
+			self.driver.execute_script("arguments[0].click();", element)
 
 		element.send_keys(text)
 
@@ -226,7 +229,10 @@ class Scraper:
 
 		element = self.find_element_by_xpath(xpath)
 
-		element.click()
+		try:
+			element.click()
+		except ElementClickInterceptedException:
+			self.driver.execute_script("arguments[0].click();", element)
 		
 		element.send_keys(text)
 
