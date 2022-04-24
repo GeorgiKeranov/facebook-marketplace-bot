@@ -15,6 +15,8 @@ def update_listings(listings, type, scraper):
 def remove_listing(data, listing_type, scraper):
 	title = generate_title_for_listing_type(data, listing_type)
 
+	# Clear input field for searching listings before entering title
+	scraper.element_delete_text('input[placeholder="Search your listings"]')
 	# Enter the title of the listing in the input for search
 	scraper.element_send_keys('input[placeholder="Search your listings"]', title)
 

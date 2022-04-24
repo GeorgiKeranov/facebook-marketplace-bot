@@ -5,6 +5,7 @@ import getpass
 import random
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -264,6 +265,17 @@ class Scraper:
 		element = self.find_element(selector)
 
 		element.clear()
+
+	def element_delete_text(self, selector, delay = True):
+		if delay:
+			self.wait_random_time()
+
+		element = self.find_element(selector)
+		
+		# Select all of the text in the input
+		element.send_keys(Keys.LEFT_SHIFT + Keys.HOME)
+		# Remove the selected text with backspace
+		element.send_keys(Keys.BACK_SPACE)
 
 	def element_wait_to_be_invisible(self, selector):
 		wait_until = EC.invisibility_of_element_located((By.CSS_SELECTOR, selector))
