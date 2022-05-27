@@ -154,7 +154,7 @@ class Scraper:
 		try:
 			# Wait for element to load
 			element = WebDriverWait(self.driver, wait_element_time).until(wait_until)
-		except TimeoutException:
+		except:
 			if exit_on_missing_element:
 				print('ERROR: Timed out waiting for the element with css selector "' + selector + '" to load')
 				# End the program execution because we cannot find the element
@@ -174,7 +174,7 @@ class Scraper:
 		try:
 			# Wait for element to load
 			element = WebDriverWait(self.driver, wait_element_time).until(wait_until)
-		except TimeoutException:
+		except:
 			if exit_on_missing_element:
 				# End the program execution because we cannot find the element
 				print('ERROR: Timed out waiting for the element with xpath "' + xpath + '" to load')
@@ -244,7 +244,7 @@ class Scraper:
 		try:
 			# Wait for input_file to load
 			input_file = WebDriverWait(self.driver, self.wait_element_time).until(wait_until)
-		except TimeoutException:
+		except:
 			print('ERROR: Timed out waiting for the input_file with selector "' + selector + '" to load')
 			# End the program execution because we cannot find the input_file
 			exit()
