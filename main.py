@@ -5,7 +5,7 @@ from helpers.listing_helper import update_listings
 scraper = Scraper('https://facebook.com')
 
 # Add login functionality to the scraper
-scraper.add_login_functionality('https://facebook.com', 'a[href="/me/"]', 'facebook')
+scraper.add_login_functionality('https://facebook.com', 'svg[aria-label="Your profile"]', 'facebook')
 
 # Go to the marketplace page
 scraper.element_click('a[href="https://www.facebook.com/marketplace/?ref=bookmark"]')
