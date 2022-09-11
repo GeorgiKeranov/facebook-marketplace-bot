@@ -1,8 +1,8 @@
 import os
 import pickle
 import time
-import getpass
 import random
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
@@ -53,7 +53,8 @@ class Scraper:
 
 	# Setup chrome driver with predefined options
 	def setup_driver(self):
-		self.driver = webdriver.Chrome(options = self.driver_options)
+		chrome_driver_path = ChromeDriverManager().install()
+		self.driver = webdriver.Chrome(executable_path = chrome_driver_path, options = self.driver_options)
 		self.driver.get(self.url)
 
 	# Add login functionality and load cookies if there are any with 'cookies_file_name'

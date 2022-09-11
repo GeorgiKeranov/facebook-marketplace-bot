@@ -68,8 +68,12 @@ def publish_listing(data, listing_type, scraper):
 	scraper.element_click_by_xpath('//span[text()="Publish"]')
 
 def generate_multiple_images_path(path, images):
+	# Last character must be '/' because after that we are adding the name of the image
+	if path[-1] != '/':
+		path += '/'
+
 	images_path = ''
-	
+
 	# Split image names into array by this symbol ";"
 	image_names = images.split(';')
 
