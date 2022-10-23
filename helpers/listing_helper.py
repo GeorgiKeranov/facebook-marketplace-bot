@@ -65,7 +65,7 @@ def publish_listing(data, listing_type, scraper):
 	add_listing_to_multiple_groups(data, scraper);
 
 	# Publish the listing
-	scraper.element_click_by_xpath('//span[text()="Publish"]')
+	scraper.element_click('div[aria-label="Publish"]')
 
 def generate_multiple_images_path(path, images):
 	# Last character must be '/' because after that we are adding the name of the image
