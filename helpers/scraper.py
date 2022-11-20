@@ -35,9 +35,7 @@ class Scraper:
 		self.driver_options = Options()
 
 		arguments = [
-			'--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36',
-			'--start-maximized',
-			'--disable-blink-features=AutomationControlled',
+			'--disable-blink-features=AutomationControlled'
 		]
 
 		experimental_options = {
@@ -56,6 +54,7 @@ class Scraper:
 		chrome_driver_path = ChromeDriverManager().install()
 		self.driver = webdriver.Chrome(executable_path = chrome_driver_path, options = self.driver_options)
 		self.driver.get(self.url)
+		self.driver.maximize_window()
 
 	# Add login functionality and load cookies if there are any with 'cookies_file_name'
 	def add_login_functionality(self, login_url, is_logged_in_selector, cookies_file_name):
