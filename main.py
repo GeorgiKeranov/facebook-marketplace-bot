@@ -6,15 +6,7 @@ scraper = Scraper('https://facebook.com')
 
 # Add login functionality to the scraper
 scraper.add_login_functionality('https://facebook.com', 'svg[aria-label="Your profile"]', 'facebook')
-
-# Go to the marketplace page
-scraper.element_click('a[href="https://www.facebook.com/marketplace/?ref=bookmark"]')
-
-# Click on create new listing button
-scraper.element_click('div[aria-label="Marketplace sidebar"] a[aria-label="Create new listing"]')
-
-# Click on Your Listings button
-scraper.element_click('div[aria-label="Marketplace Composer"] a[href="/marketplace/you/selling/"]:not([aria-current="page"])')
+scraper.go_to_page('https://facebook.com/marketplace/you/selling')
 
 # Get data for item type listings from csvs/items.csv
 item_listings = get_data_from_csv('items')
