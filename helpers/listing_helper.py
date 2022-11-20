@@ -58,6 +58,9 @@ def publish_listing(data, listing_type, scraper):
 	
 	scraper.element_send_keys('label[aria-label="Price"] input', data['Price'])
 	scraper.element_send_keys('label[aria-label="Description"] textarea', data['Description'])
+	scraper.element_send_keys('label[aria-label="Location"] input', data['Location'])
+	scraper.element_click('ul[role="listbox"] li:first-child > div')
+
 	# Go to the next step
 	scraper.element_click('div [aria-label="Next"] > div')
 
