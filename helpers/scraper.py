@@ -51,7 +51,7 @@ class Scraper:
 
 	# Setup chrome driver with predefined options
 	def setup_driver(self):
-		chrome_driver_path = ChromeDriverManager().install()
+		chrome_driver_path = ChromeDriverManager(version='106.0.5249.61').install()
 		self.driver = webdriver.Chrome(executable_path = chrome_driver_path, options = self.driver_options)
 		self.driver.get(self.url)
 		self.driver.maximize_window()
