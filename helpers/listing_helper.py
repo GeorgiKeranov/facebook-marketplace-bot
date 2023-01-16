@@ -35,8 +35,12 @@ def remove_listing(data, listing_type, scraper):
 
 	# Click on the delete listing button
 	scraper.element_click('div[aria-label="Delete"]')
+	
 	# Click on confirm button to delete
-	scraper.element_click('div[aria-label="Delete Listing"] div[aria-label="Delete"][tabindex="0"]')
+	confirm_delete_selector = 'div[aria-label="Delete Listing"] div[aria-label="Delete"][tabindex="0"]'
+	if scraper.find_element(confirm_delete_selector, False, 3):
+		scraper.element_click(confirm_delete_selector)
+	
 	# Wait until the popup is closed
 	scraper.element_wait_to_be_invisible('div[aria-label="Your Listing"]')
 
@@ -61,14 +65,15 @@ def publish_listing(data, listing_type, scraper):
 	scraper.element_send_keys('label[aria-label="Location"] input', data['Location'])
 	scraper.element_click('ul[role="listbox"] li:first-child > div')
 
-	# Go to the next step
-	scraper.element_click('div [aria-label="Next"] > div')
-
-	# Add listing to multiple groups
-	add_listing_to_multiple_groups(data, scraper);
+	next_button_selector = 'div [aria-label="Next"] > div'
+	if scraper.find_element(next_button_selector, False, 3):
+		# Go to the next step
+		scraper.element_click(next_button_selector)
+		# Add listing to multiple groups
+		add_listing_to_multiple_groups(data, scraper)
 
 	# Publish the listing
-	scraper.element_click('div[aria-label="Publish"]')
+	scraper.element_click('div[aria-label="Publish"]:not([aria-disabled])')
 
 def generate_multiple_images_path(path, images):
 	# Last character must be '/' because after that we are adding the name of the image

@@ -184,7 +184,7 @@ class Scraper:
 
 		return element
 
-	# Wait random time before cliking on the element
+	# Wait random time before clicking on the element
 	def element_click(self, selector, delay = True):
 		if delay:
 			self.wait_random_time()
@@ -196,7 +196,7 @@ class Scraper:
 		except ElementClickInterceptedException:
 			self.driver.execute_script("arguments[0].click();", element)
 
-	# Wait random time before cliking on the element
+	# Wait random time before clicking on the element
 	def element_click_by_xpath(self, xpath, delay = True):
 		if delay:
 			self.wait_random_time()
@@ -207,7 +207,6 @@ class Scraper:
 			element.click()
 		except ElementClickInterceptedException:
 			self.driver.execute_script("arguments[0].click();", element)
-
 
 	# Wait random time before sending the keys to the element
 	def element_send_keys(self, selector, text, delay = True):
