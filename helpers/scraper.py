@@ -4,6 +4,7 @@ import time
 import random
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -52,7 +53,7 @@ class Scraper:
 	# Setup chrome driver with predefined options
 	def setup_driver(self):
 		chrome_driver_path = ChromeDriverManager().install()
-		self.driver = webdriver.Chrome(executable_path = chrome_driver_path, options = self.driver_options)
+		self.driver = webdriver.Chrome(service=ChromeService(chrome_driver_path), options = self.driver_options)
 		self.driver.get(self.url)
 		self.driver.maximize_window()
 
