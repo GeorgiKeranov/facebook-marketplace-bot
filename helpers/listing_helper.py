@@ -12,20 +12,10 @@ def update_listings(listings, type, scraper):
 		# Publish the listing in marketplace
 		publish_listing(listing, type, scraper)
 
-def remove_listing(data, listing_type, scraper):
+
+def remove_listing(data, listing_type, scraper) :
 	title = generate_title_for_listing_type(data, listing_type)
-	
-	searchInput = scraper.find_element('input[placeholder="Search your listings"]', False)
-	# Search input field is not existing	
-	if not searchInput:
-		return
-	
-	# Clear input field for searching listings before entering title
-	scraper.element_delete_text('input[placeholder="Search your listings"]')
-	# Enter the title of the listing in the input for search
-	scraper.element_send_keys('input[placeholder="Search your listings"]', title)
-	# Search for the listing by the title
-	listing_title = scraper.find_element_by_xpath('//span[text()="' + title + '"]', False, 3)
+	listing_title = find_listing_by_title(title, scraper)
 
 	# Listing not found so stop the function
 	if not listing_title:
@@ -66,7 +56,8 @@ def publish_listing(data, listing_type, scraper):
 	scraper.element_click('ul[role="listbox"] li:first-child > div')
 
 	next_button_selector = 'div [aria-label="Next"] > div'
-	if scraper.find_element(next_button_selector, False, 3):
+	next_button = scraper.find_element(next_button_selector, False, 3)
+	if next_button:
 		# Go to the next step
 		scraper.element_click(next_button_selector)
 		# Add listing to multiple groups
@@ -74,6 +65,10 @@ def publish_listing(data, listing_type, scraper):
 
 	# Publish the listing
 	scraper.element_click('div[aria-label="Publish"]:not([aria-disabled])')
+
+	if not next_button:
+		post_listing_to_multiple_groups(data, listing_type, scraper)
+
 
 def generate_multiple_images_path(path, images):
 	# Last character must be '/' because after that we are adding the name of the image
@@ -169,3 +164,61 @@ def add_listing_to_multiple_groups(data, scraper):
 		group_name = group_name.strip()
 
 		scraper.element_click_by_xpath('//span[text()="' + group_name + '"]')
+
+def post_listing_to_multiple_groups(data, listing_type, scraper):
+	title = generate_title_for_listing_type(data, listing_type)
+	title_element = find_listing_by_title(title, scraper)
+
+	# If there is no add with this title do not do nothing
+	if not title_element:
+		return
+
+	# Create an array for group names by spliting the string by this symbol ";"
+	group_names = data['Groups'].split(';')
+
+	# If the groups are empty do not do nothing
+	if not group_names:
+		return
+
+	search_input_selector = '[aria-label="Search for groups"]'
+
+	# Post in different groups
+	for group_name in group_names:
+		# Click on the Share button to the listing that we want to share
+		scraper.element_click('[aria-label="' + title + '"] + div [aria-label="Share"]')
+		# Click on the Share to a group button
+		scraper.element_click_by_xpath('//span[text()="Share to a group"]')
+
+		# Remove whitespace before and after the name
+		group_name = group_name.strip()
+
+		# Remove current text from this input
+		scraper.element_delete_text(search_input_selector)
+		# Enter the title of the group in the input for search
+		scraper.element_send_keys(search_input_selector, group_name)
+	
+		scraper.element_click_by_xpath('//span[text()="' + group_name + '"]')
+		
+		if (scraper.find_element('[aria-label="Create a public post…"]', False, 3)):
+			scraper.element_send_keys('[aria-label="Create a public post…"]', data['Description'])
+		elif (scraper.find_element('[aria-label="Write something..."]', False, 3)):
+			scraper.element_send_keys('[aria-label="Write something..."]', data['Description'])
+		
+		scraper.element_click('[aria-label="Post"]:not([aria-disabled])')
+		# Wait till the post is posted successfully
+		scraper.element_wait_to_be_invisible('[role="dialog"]')
+		scraper.element_wait_to_be_invisible('[aria-label="Loading...]"')
+		scraper.find_element_by_xpath('//span[text()="Shared to your group."]', False, 10)
+
+def find_listing_by_title(title, scraper):
+	searchInput = scraper.find_element('input[placeholder="Search your listings"]', False)
+	# Search input field is not existing	
+	if not searchInput:
+		return False
+	
+	# Clear input field for searching listings before entering title
+	scraper.element_delete_text('input[placeholder="Search your listings"]')
+	# Enter the title of the listing in the input for search
+	scraper.element_send_keys('input[placeholder="Search your listings"]', title)
+	
+	return scraper.find_element_by_xpath('//span[text()="' + title + '"]', False, 10)
