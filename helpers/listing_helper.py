@@ -27,9 +27,13 @@ def remove_listing(data, listing_type, scraper) :
 	scraper.element_click('div[aria-label="Delete"]')
 	
 	# Click on confirm button to delete
-	confirm_delete_selector = 'div[aria-label="Delete Listing"] div[aria-label="Delete"][tabindex="0"]'
+	confirm_delete_selector = 'div[aria-label="Delete listing"] div[aria-label="Delete"][tabindex="0"]'
 	if scraper.find_element(confirm_delete_selector, False, 3):
 		scraper.element_click(confirm_delete_selector)
+	else:
+		confirm_delete_selector = 'div[aria-label="Delete Listing"] div[aria-label="Delete"][tabindex="0"]'
+		if scraper.find_element(confirm_delete_selector, True, 3):
+			scraper.element_click(confirm_delete_selector)
 	
 	# Wait until the popup is closed
 	scraper.element_wait_to_be_invisible('div[aria-label="Your Listing"]')
