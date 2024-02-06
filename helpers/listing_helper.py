@@ -24,7 +24,7 @@ def remove_listing(data, listing_type, scraper) :
 	listing_title.click()
 
 	# Click on the delete listing button
-	scraper.element_click('div[aria-label="Delete"]')
+	scraper.element_click('div:not([role="gridcell"]) > div[aria-label="Delete"][tabindex="0"]')
 	
 	# Click on confirm button to delete
 	confirm_delete_selector = 'div[aria-label="Delete listing"] div[aria-label="Delete"][tabindex="0"]'
@@ -199,7 +199,7 @@ def post_listing_to_multiple_groups(data, listing_type, scraper):
 		# Remove current text from this input
 		scraper.element_delete_text(search_input_selector)
 		# Enter the title of the group in the input for search
-		scraper.element_send_keys(search_input_selector, group_name)
+		scraper.element_send_keys(search_input_selector, group_name[:51])
 	
 		scraper.element_click_by_xpath('//span[text()="' + group_name + '"]')
 		
