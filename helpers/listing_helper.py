@@ -70,8 +70,11 @@ def publish_listing(data, listing_type, scraper):
 	# Publish the listing
 	scraper.element_click('div[aria-label="Publish"]:not([aria-disabled])')
 
-	if not next_button:
-		post_listing_to_multiple_groups(data, listing_type, scraper)
+	# Wait until the listing is published and we are on the listings page where there is a search input
+	scraper.find_element('input[placeholder="Search your listings"]', False)
+
+	# if not next_button:
+	post_listing_to_multiple_groups(data, listing_type, scraper)
 
 
 def generate_multiple_images_path(path, images):
@@ -190,8 +193,9 @@ def post_listing_to_multiple_groups(data, listing_type, scraper):
 	for group_name in group_names:
 		# Click on the Share button to the listing that we want to share
 		scraper.element_click('[aria-label="' + title + '"] + div [aria-label="Share"]')
+		
 		# Click on the Share to a group button
-		scraper.element_click_by_xpath('//span[text()="Share to a group"]')
+		scraper.element_click_by_xpath('//span[text()="Group"]')
 
 		# Remove whitespace before and after the name
 		group_name = group_name.strip()
