@@ -1,5 +1,6 @@
 import csv
 import os
+import random
 
 def get_data_from_csv(csv_file_name):
 	data = []
@@ -15,5 +16,8 @@ def get_data_from_csv(csv_file_name):
 	except:
 		print('File was not found in csvs' + file_path)
 		exit()
+
+	# # random data to ensure new listings also get posted - still yet to decide
+	# random.shuffle(data)
 
 	return data
