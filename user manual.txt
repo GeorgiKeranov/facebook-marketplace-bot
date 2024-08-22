@@ -1,0 +1,13 @@
+# install these things
+1. install python
+2. download google chrome
+3. python -m pip install selenium
+4. python -m pip install pickle-mixin
+5. python -m pip install webdriver-manager
+
+# groups -  copy the data (in quotes) into the excel groups column
+items = "BUY AND SELL IN HARARE ZIMBABWE; Buy Zimbabwe Marketplace; Harare Markets And Adverts; Buy & Sell Anything Harare (Cheap Products); FOR SALE IN HARARE AND other cities Zimbabwe; Zimbabwe Best Buying & Selling; HARARE MARKETPLACE; Zim Marketplace; Preloved second hand goods Zimbabwe; Zimbabwe Buy and Sell group"
+vehicles = "Zimbabwe Cheap Cars $700 and below; Sam Motors ZW Vehicles Sells & Adverts; AFFORDABLE VEHICLE SALE'S; Cars - buy or sell around Zimbabwe; Buy & Sell in Zimbabwe - Cars, Motorbikes, Trucks; USED CARS FOR SALE - ZIMBABAWE & REGIONAL"
+rentals = "HARARE RENTALS GROUP; for sale and rent in Zimbabwe; Houses to Rent Zimbabwe; properties for sale and letting in zimbabwe; Harare Rentals no agents..; Apartments, Home, Cottages, Rooms for Rent in Harare"
+
+# make sure to use the same format and the columns in facebook marketplace. and write categories that exist.

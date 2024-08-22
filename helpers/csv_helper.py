@@ -1,6 +1,7 @@
 import csv
 import os
 import random
+from helpers.logging_helper import log
 
 def get_data_from_csv(csv_file_name):
 	data = []
@@ -15,9 +16,10 @@ def get_data_from_csv(csv_file_name):
 				data.append(dictionary_row)
 	except:
 		print('File was not found in csvs' + file_path)
+		log("File was not found in csvs")
 		exit()
 
-	# # random data to ensure new listings also get posted - still yet to decide
-	# random.shuffle(data)
+	# random data to ensure new listings also get posted - still yet to decide
+	random.shuffle(data)
 
 	return data

@@ -1,5 +1,6 @@
 import time
 import random
+from helpers.logging_helper import log
 
 # Remove and then publish each listing
 def update_listings(listings, type, scraper):
@@ -10,20 +11,26 @@ def update_listings(listings, type, scraper):
 	# Check if listing is already listed and remove it then publish it like a new one
 	for listing in listings:
 
-		#delay before next publish within an hour (5 mins, 30 mins)
-		#delay_time(300,1800)
+		# delay before next publish within an hour (5 mins, 30 mins)
+		delay_time(300,1800)
 
-		# Remove listing if it is already published
-		remove_listing(listing, type, scraper)
+		try:
+			# Remove listing if it is already published
+			remove_listing(listing, type, scraper)
+		except:
+			log("failed to remove existing listing")
 
-		# Publish the listing in marketplace
-		publish_listing(listing, type, scraper)
+		try:
+			# Publish the listing in marketplace
+			publish_listing(listing, type, scraper)
+		except:
+			log("failed to publish listing")
 		
 
-# def delay_time(min, max):
-# 	random_delay = random.randint(min,max)
-# 	print(random_delay)
-# 	time.sleep(random_delay)
+def delay_time(min, max):
+	random_delay = random.randint(min,max)
+	print(random_delay)
+	time.sleep(random_delay)
 
 def remove_listing(data, listing_type, scraper) :
 	title = generate_title_for_listing_type(data, listing_type)
@@ -84,7 +91,7 @@ def publish_listing(data, listing_type, scraper):
 		# Go to the next step
 		scraper.element_click(next_button_selector)
 		# Add listing to multiple groups
-		add_listing_to_multiple_groups(data, scraper)
+		# add_listing_to_multiple_groups(data, scraper)
 
 	# Publish the listing
 	scraper.element_click('div[aria-label="Publish"]:not([aria-disabled])')
