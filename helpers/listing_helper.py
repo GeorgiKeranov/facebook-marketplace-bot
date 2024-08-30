@@ -1,3 +1,7 @@
+import time
+import random
+from helpers.logging_helper import log
+
 # Remove and then publish each listing
 def update_listings(listings, type, scraper):
 	# If listings are empty stop the function
@@ -6,12 +10,27 @@ def update_listings(listings, type, scraper):
 
 	# Check if listing is already listed and remove it then publish it like a new one
 	for listing in listings:
-		# Remove listing if it is already published
-		remove_listing(listing, type, scraper)
 
-		# Publish the listing in marketplace
-		publish_listing(listing, type, scraper)
+		# delay before next publish within an hour (5 mins, 30 mins)
+		delay_time(300,1800)
 
+		try:
+			# Remove listing if it is already published
+			remove_listing(listing, type, scraper)
+		except:
+			log("failed to remove existing listing")
+
+		try:
+			# Publish the listing in marketplace
+			publish_listing(listing, type, scraper)
+		except:
+			log("failed to publish listing")
+		
+
+def delay_time(min, max):
+	random_delay = random.randint(min,max)
+	print(random_delay)
+	time.sleep(random_delay)
 
 def remove_listing(data, listing_type, scraper) :
 	title = generate_title_for_listing_type(data, listing_type)
@@ -54,10 +73,17 @@ def publish_listing(data, listing_type, scraper):
 	# Call function by name dynamically
 	globals()[function_name](data, scraper)
 	
-	scraper.element_send_keys('label[aria-label="Price"] input', data['Price'])
-	scraper.element_send_keys('label[aria-label="Description"] textarea', data['Description'])
-	scraper.element_send_keys('label[aria-label="Location"] input', data['Location'])
-	scraper.element_click('ul[role="listbox"] li:first-child > div')
+	# validation of rental listing since its has different aria-label name
+	if(listing_type == 'rental'):
+		scraper.element_send_keys('label[aria-label="Price per month"] input', data['Price per month'])
+		# address of property of rent
+		scraper.element_send_keys('label[aria-label="Property for rent description"] textarea', data['Description'])	
+		
+	else:
+		scraper.element_send_keys('label[aria-label="Price"] input', data['Price'])
+		scraper.element_send_keys('label[aria-label="Description"] textarea', data['Description'])
+		scraper.element_send_keys('label[aria-label="Location"] input', data['Location'])
+		scraper.element_click('ul[role="listbox"] li:first-child > div')
 
 	next_button_selector = 'div [aria-label="Next"] > div'
 	next_button = scraper.find_element(next_button_selector, False, 3)
@@ -65,7 +91,7 @@ def publish_listing(data, listing_type, scraper):
 		# Go to the next step
 		scraper.element_click(next_button_selector)
 		# Add listing to multiple groups
-		add_listing_to_multiple_groups(data, scraper)
+		# add_listing_to_multiple_groups(data, scraper)
 
 	# Publish the listing
 	scraper.element_click('div[aria-label="Publish"]:not([aria-disabled])')
@@ -146,6 +172,70 @@ def add_fields_for_item(data, scraper):
 	if data['Category'] == 'Sports & Outdoors':
 		scraper.element_send_keys('label[aria-label="Brand"] input', data['Brand'])
 
+def add_fields_for_rental(data, scraper):
+    # Add rental-specific fields
+
+	# Scroll to "Property Type" select field
+	scraper.scroll_to_element('label[aria-label="Type of property for rent"]')
+	# Expand Property Type select
+	scraper.element_click('label[aria-label="Type of property for rent"]')
+	# Select Property Type
+	scraper.element_click_by_xpath('//span[text()="' + data['Property Type'] + '"]')
+    
+	# number of bedrooms input
+	scraper.element_send_keys('label[aria-label="Number of bedrooms"] input', data['Bedrooms'])
+
+	# number of bathrooms input
+	scraper.element_send_keys('label[aria-label="Number of bathrooms"] input', data['Bathrooms'])
+
+	scraper.scroll_to_element('label[aria-label="Address of property for rent"]')
+	for char in data['Property Address']:
+		scraper.element_send_keys('label[aria-label="Address of property for rent"] input', char)
+		time.sleep(0.05)
+	scraper.element_click_by_xpath('//span[text()="' + data['Property Address'] + '"]')
+	
+	time.sleep(2)
+	scraper.element_click_by_xpath('//span[text()="' + data['Property Type'] + '"]')
+
+	# additional options - uncomment if you want them
+
+	# # property square feet input
+	# scraper.element_send_keys('label[aria-label="Property square feet"] input', data['Square Footage'])
+
+	# date available input
+	#scraper.element_send_keys('label[aria-label="Choose Date"] input', data['Date Available'])
+
+	# # Scroll to "Property Type" select field
+	# scraper.scroll_to_element('label[aria-label="Washing machine/dryer"]')
+	# # Expand Property Type select
+	# scraper.element_click('label[aria-label="Washing machine/dryer"]')
+	# # Select Property Type
+	# scraper.element_click_by_xpath('//span[text()="' + data['Washing machine/dryer'] + '"]')
+
+	# # Scroll to "Property Type" select field
+	# scraper.scroll_to_element('label[aria-label="Parking type"]')
+	# # Expand Property Type select
+	# scraper.element_click('label[aria-label="Parking type"]')
+	# # Select Property Type
+	# scraper.element_click_by_xpath('//span[text()="' + data['Parking type'] + '"]')
+
+	# # Scroll to "Property Type" select field
+	# scraper.scroll_to_element('label[aria-label="Air conditioning"]')
+	# # Expand Property Type select
+	# scraper.element_click('label[aria-label="Air conditioning"]')
+	# # Select Property Type
+	# scraper.element_click_by_xpath('//span[text()="' + data['Air Conditioning'] + '"]')
+
+	# # Scroll to "Property Type" select field
+	# scraper.scroll_to_element('label[aria-label="Heating type"]')
+	# # Expand Property Type select
+	# scraper.element_click('label[aria-label="Heating type"]')
+	# # Select Property Type
+	# scraper.element_click_by_xpath('//span[text()="' + data['Heating Type'] + '"]')
+
+	# # price per month input
+	# scraper.element_send_keys('label[aria-label="Price per month"] input', data['Price per month'])
+
 def generate_title_for_listing_type(data, listing_type):
 	title = ''
 
@@ -154,6 +244,9 @@ def generate_title_for_listing_type(data, listing_type):
 
 	if listing_type == 'vehicle':
 		title = data['Year'] + ' ' + data['Make'] + ' ' + data['Model']
+
+	if listing_type == 'rental':
+		title = data['Property Type'] + ' for Rent in ' + data['Location']
 
 	return title
 
