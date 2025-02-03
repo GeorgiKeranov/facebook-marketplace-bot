@@ -68,8 +68,6 @@ def publish_listing(data, listing_type, scraper):
 
 	# Publish the listing
 	scraper.element_click('div[aria-label="Publish"]:not([aria-disabled])')
-	
-	# Check what is the reason to not click that element
 	scraper.element_click_by_xpath('//div[@tabindex="0"] //span[text()="Leave Page"]')
 
 	# Wait until the listing is published
