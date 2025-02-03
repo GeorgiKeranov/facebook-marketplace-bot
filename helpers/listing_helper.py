@@ -12,7 +12,6 @@ def update_listings(listings, type, scraper):
 		# Publish the listing in marketplace
 		publish_listing(listing, type, scraper)
 
-
 def remove_listing(data, listing_type, scraper) :
 	title = generate_title_for_listing_type(data, listing_type)
 	listing_title = find_listing_by_title(title, scraper)
@@ -69,12 +68,15 @@ def publish_listing(data, listing_type, scraper):
 
 	# Publish the listing
 	scraper.element_click('div[aria-label="Publish"]:not([aria-disabled])')
+	
+	# Check what is the reason to not click that element
+	scraper.element_click_by_xpath('//div[@tabindex="0"] //span[text()="Leave Page"]')
 
-	# Wait until the listing is published and we are on the listings page where there is a search input
-	scraper.find_element('input[placeholder="Search your listings"]', False)
+	# Wait until the listing is published
+	wait_until_listing_is_published(listing_type, scraper)
 
-	# if not next_button:
-	post_listing_to_multiple_groups(data, listing_type, scraper)
+	if not next_button:
+		post_listing_to_multiple_groups(data, listing_type, scraper)
 
 
 def generate_multiple_images_path(path, images):
@@ -192,7 +194,7 @@ def post_listing_to_multiple_groups(data, listing_type, scraper):
 	# Post in different groups
 	for group_name in group_names:
 		# Click on the Share button to the listing that we want to share
-		scraper.element_click('[aria-label="' + title + '"] + div [aria-label="Share"]')
+		scraper.element_click_by_xpath('//*[contains(@aria-label, "' + title + '")]//span//span[contains(., "Share")]')
 		
 		# Click on the Share to a group button
 		scraper.element_click_by_xpath('//span[text()="Group"]')
@@ -230,3 +232,9 @@ def find_listing_by_title(title, scraper):
 	scraper.element_send_keys('input[placeholder="Search your listings"]', title)
 	
 	return scraper.find_element_by_xpath('//span[text()="' + title + '"]', False, 10)
+
+def wait_until_listing_is_published(listing_type, scraper):
+	if listing_type == 'item':
+		scraper.element_wait_to_be_invisible_by_xpath('//h1[text()="Item for sale"]')
+	elif listing_type == 'vehicle':
+		scraper.element_wait_to_be_invisible_by_xpath('//h1[text()="Vehicle for sale"]')

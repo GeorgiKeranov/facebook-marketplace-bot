@@ -4,7 +4,7 @@ import time
 import random
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -25,11 +25,6 @@ class Scraper:
 
 		self.setup_driver_options()
 		self.setup_driver()
-
-	# Automatically close driver on destruction of the object
-	def __del__(self):
-		self.driver.close()
-
 	# Add these options in order to make chrome driver appear as a human instead of detecting it as a bot
 	# Also change the 'cdc_' string in the chromedriver.exe with Notepad++ for example with 'abc_' to prevent detecting it as a bot
 	def setup_driver_options(self):
@@ -52,10 +47,15 @@ class Scraper:
 
 	# Setup chrome driver with predefined options
 	def setup_driver(self):
-		chrome_driver_path = ChromeDriverManager().install()
-		self.driver = webdriver.Chrome(service=ChromeService(chrome_driver_path), options = self.driver_options)
+		chrome_driver = Service(ChromeDriverManager().install())
+		self.driver = webdriver.Chrome(service=chrome_driver, options = self.driver_options)
 		self.driver.get(self.url)
 		self.driver.maximize_window()
+
+	# Automatically close driver on destruction of the object
+	def __del__(self):
+		self.driver.close()
+
 
 	# Add login functionality and load cookies if there are any with 'cookies_file_name'
 	def add_login_functionality(self, login_url, is_logged_in_selector, cookies_file_name):
@@ -75,7 +75,7 @@ class Scraper:
 				return
 		
 		# Wait for the user to log in with maximum amount of time 5 minutes
-		print('Please login manually in the browser and after that you will be automatically loged in with cookies. Note that if you do not log in for five minutes, the program will turn off.')
+		print('Please login manually in the browser and after that you will be automatically logged in with cookies. Note that if you do not log in for five minutes, the program will turn off.')
 		is_logged_in = self.is_logged_in(300)
 
 		# User is not logged in so exit from the program
@@ -148,7 +148,7 @@ class Scraper:
 		if wait_element_time is None:
 			wait_element_time = self.wait_element_time
 
-		# Intialize the condition to wait
+		# Initialize the condition to wait
 		wait_until = EC.element_to_be_clickable((By.CSS_SELECTOR, selector))
 
 		try:
@@ -168,7 +168,7 @@ class Scraper:
 		if wait_element_time is None:
 			wait_element_time = self.wait_element_time
 
-		# Intialize the condition to wait
+		# Initialize the condition to wait
 		wait_until = EC.element_to_be_clickable((By.XPATH, xpath))
 
 		try:
@@ -185,11 +185,11 @@ class Scraper:
 		return element
 
 	# Wait random time before clicking on the element
-	def element_click(self, selector, delay = True):
+	def element_click(self, selector, delay = True, exit_on_missing_element = True):
 		if delay:
 			self.wait_random_time()
 
-		element = self.find_element(selector)
+		element = self.find_element(selector, exit_on_missing_element)
 
 		try:
 			element.click()
@@ -197,11 +197,11 @@ class Scraper:
 			self.driver.execute_script("arguments[0].click();", element)
 
 	# Wait random time before clicking on the element
-	def element_click_by_xpath(self, xpath, delay = True):
+	def element_click_by_xpath(self, xpath, delay = True, exit_on_missing_element = True):
 		if delay:
 			self.wait_random_time()
 
-		element = self.find_element_by_xpath(xpath)
+		element = self.find_element_by_xpath(xpath, exit_on_missing_element)
 
 		try:
 			element.click()
@@ -209,11 +209,11 @@ class Scraper:
 			self.driver.execute_script("arguments[0].click();", element)
 
 	# Wait random time before sending the keys to the element
-	def element_send_keys(self, selector, text, delay = True):
+	def element_send_keys(self, selector, text, delay = True, exit_on_missing_element = True):
 		if delay:
 			self.wait_random_time()
 
-		element = self.find_element(selector)
+		element = self.find_element(selector, exit_on_missing_element)
 
 		try:
 			element.click()
@@ -223,11 +223,11 @@ class Scraper:
 		element.send_keys(text)
 
 	# Wait random time before sending the keys to the element
-	def element_send_keys_by_xpath(self, xpath, text, delay = True):
+	def element_send_keys_by_xpath(self, xpath, text, delay = True, exit_on_missing_element = True):
 		if delay:
 			self.wait_random_time()
 
-		element = self.find_element_by_xpath(xpath)
+		element = self.find_element_by_xpath(xpath, exit_on_missing_element)
 
 		try:
 			element.click()
@@ -237,7 +237,7 @@ class Scraper:
 		element.send_keys(text)
 
 	def input_file_add_files(self, selector, files):
-		# Intialize the condition to wait
+		# Initialize the condition to wait
 		wait_until = EC.presence_of_element_located((By.CSS_SELECTOR, selector))
 
 		try:
@@ -257,19 +257,19 @@ class Scraper:
 			exit()
 
 	# Wait random time before clearing the element
-	def element_clear(self, selector, delay = True):
+	def element_clear(self, selector, delay = True, exit_on_missing_element = True):
 		if delay:
 			self.wait_random_time()
 
-		element = self.find_element(selector)
+		element = self.find_element(selector, exit_on_missing_element)
 
 		element.clear()
 
-	def element_delete_text(self, selector, delay = True):
+	def element_delete_text(self, selector, delay = True, exit_on_missing_element = True):
 		if delay:
 			self.wait_random_time()
 
-		element = self.find_element(selector)
+		element = self.find_element(selector, exit_on_missing_element)
 		
 		# Select all of the text in the input
 		element.send_keys(Keys.LEFT_SHIFT + Keys.HOME)
@@ -283,13 +283,21 @@ class Scraper:
 			WebDriverWait(self.driver, self.wait_element_time).until(wait_until)
 		except:
 			print('Error waiting the element with selector "' + selector + '" to be invisible')
+
+	def element_wait_to_be_invisible_by_xpath(self, xpath):
+		wait_until = EC.invisibility_of_element_located((By.XPATH, xpath))
+
+		try:
+			WebDriverWait(self.driver, self.wait_element_time).until(wait_until)
+		except:
+			print('Error waiting the element with xpath "' + xpath + '" to be invisible')
 	
-	def scroll_to_element(self, selector):
-		element = self.find_element(selector)
+	def scroll_to_element(self, selector, exit_on_missing_element = True):
+		element = self.find_element(selector, exit_on_missing_element)
 
 		self.driver.execute_script('arguments[0].scrollIntoView(true);', element)
 
-	def scroll_to_element_by_xpath(self, xpath):
-		element = self.find_element_by_xpath(xpath)
+	def scroll_to_element_by_xpath(self, xpath, exit_on_missing_element = True):
+		element = self.find_element_by_xpath(xpath, exit_on_missing_element)
 
 		self.driver.execute_script('arguments[0].scrollIntoView(true);', element)
