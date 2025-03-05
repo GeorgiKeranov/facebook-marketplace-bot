@@ -219,8 +219,17 @@ class Scraper:
 			element.click()
 		except ElementClickInterceptedException:
 			self.driver.execute_script("arguments[0].click();", element)
+			
+		JS_ADD_TEXT_TO_INPUT = """
+		var elm = arguments[0], txt = arguments[1];
+		elm.value += txt;
+		elm.dispatchEvent(new Event('change'));
+		"""
 
-		element.send_keys(text)
+		try:
+			element.send_keys(text)
+		except:
+			self.driver.execute_script(JS_ADD_TEXT_TO_INPUT, element, text)
 
 	# Wait random time before sending the keys to the element
 	def element_send_keys_by_xpath(self, xpath, text, delay = True, exit_on_missing_element = True):
