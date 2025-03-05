@@ -53,9 +53,9 @@ def publish_listing(data, listing_type, scraper):
 	# Call function by name dynamically
 	globals()[function_name](data, scraper)
 	
-	scraper.element_send_keys('label[aria-label="Price"] input', data['Price'])
-	scraper.element_send_keys('label[aria-label="Description"] textarea', data['Description'])
-	scraper.element_send_keys('label[aria-label="Location"] input', data['Location'])
+	scraper.element_send_keys_by_xpath('//span[text()="Price"]/following-sibling::input[1]', data['Price'])
+	scraper.element_send_keys_by_xpath('//span[text()="Description"]/following-sibling::div/textarea', data['Description'])
+	scraper.element_send_keys_by_xpath('//span[text()="Location"]/following-sibling::input[1]', data['Location'])
 	scraper.element_click('ul[role="listbox"] li:first-child > div')
 
 	next_button_selector = 'div [aria-label="Next"] > div'
@@ -104,47 +104,47 @@ def generate_multiple_images_path(path, images):
 # Add specific fields for listing from type vehicle
 def add_fields_for_vehicle(data, scraper):
 	# Expand vehicle type select
-	scraper.element_click('label[aria-label="Vehicle type"]')
+	scraper.element_click_by_xpath('//span[text()="Vehicle type"]')
 	# Select vehicle type
 	scraper.element_click_by_xpath('//span[text()="' + data['Vehicle Type'] + '"]')
 
 	# Scroll to years select
-	scraper.scroll_to_element('label[aria-label="Year"]')
+	scraper.scroll_to_element_by_xpath('//span[text()="Year"]')
 	# Expand years select
-	scraper.element_click('label[aria-label="Year"]')
+	scraper.element_click_by_xpath('//span[text()="Year"]')
 	scraper.element_click_by_xpath('//span[text()="' + data['Year'] + '"]')
 
-	scraper.element_send_keys('label[aria-label="Make"] input', data['Make'])
-	scraper.element_send_keys('label[aria-label="Model"] input', data['Model'])
+	scraper.element_send_keys_by_xpath('//span[text()="Make"]/following-sibling::input[1]', data['Make'])
+	scraper.element_send_keys_by_xpath('//span[text()="Model"]/following-sibling::input[1]', data['Model'])
 
 	# Scroll to mileage input
-	scraper.scroll_to_element('label[aria-label="Mileage"] input')	
+	scraper.scroll_to_element_by_xpath('//span[text()="Mileage"]/following-sibling::input[1]')	
 	# Click on the mileage input
-	scraper.element_send_keys('label[aria-label="Mileage"] input', data['Mileage'])
+	scraper.element_send_keys_by_xpath('//span[text()="Mileage"]/following-sibling::input[1]', data['Mileage'])
 
 	# Expand fuel type select
-	scraper.element_click('label[aria-label="Fuel type"]')
+	scraper.element_click_by_xpath('//span[text()="Fuel type"]')
 	# Select fuel type
 	scraper.element_click_by_xpath('//span[text()="' + data['Fuel Type'] + '"]')
 
 # Add specific fields for listing from type item
 def add_fields_for_item(data, scraper):
-	scraper.element_send_keys('label[aria-label="Title"] input', data['Title'])
+	scraper.element_send_keys_by_xpath('//span[text()="Title"]/following-sibling::input[1]', data['Title'])
 
 	# Scroll to "Category" select field
-	scraper.scroll_to_element('label[aria-label="Category"]')
+	scraper.scroll_to_element_by_xpath('//span[text()="Category"]')
 	# Expand category select
-	scraper.element_click('label[aria-label="Category"]')
+	scraper.element_click_by_xpath('//span[text()="Category"]')
 	# Select category
 	scraper.element_click_by_xpath('//span[text()="' + data['Category'] + '"]')
 
 	# Expand category select
-	scraper.element_click('label[aria-label="Condition"]')
+	scraper.element_click_by_xpath('//div/span[text()="Condition"]')
 	# Select category
 	scraper.element_click_by_xpath('//span[@dir="auto"][text()="' + data['Condition'] + '"]')
 
 	if data['Category'] == 'Sports & Outdoors':
-		scraper.element_send_keys('label[aria-label="Brand"] input', data['Brand'])
+		scraper.element_send_keys_by_xpath('//span[text()="Brand"]/following-sibling::input[1]', data['Brand'])
 
 def generate_title_for_listing_type(data, listing_type):
 	title = ''
