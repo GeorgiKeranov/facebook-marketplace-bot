@@ -282,7 +282,7 @@ class Scraper:
 		try:
 			WebDriverWait(self.driver, self.wait_element_time).until(wait_until)
 		except:
-			print('Error waiting the element with selector "' + selector + '" to be invisible')
+			print('Warning when waiting the element with selector "' + selector + '" to be invisible')
 
 	def element_wait_to_be_invisible_by_xpath(self, xpath):
 		wait_until = EC.invisibility_of_element_located((By.XPATH, xpath))
@@ -290,7 +290,7 @@ class Scraper:
 		try:
 			WebDriverWait(self.driver, self.wait_element_time).until(wait_until)
 		except:
-			print('Error waiting the element with xpath "' + xpath + '" to be invisible')
+			print('Warning when waiting the element with xpath "' + xpath + '" to be invisible')
 	
 	def scroll_to_element(self, selector, exit_on_missing_element = True):
 		element = self.find_element(selector, exit_on_missing_element)
