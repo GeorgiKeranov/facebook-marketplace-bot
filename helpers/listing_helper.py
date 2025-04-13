@@ -10,7 +10,11 @@ def update_listings(listings, type, scraper):
 		remove_listing(listing, type, scraper)
 
 		# Publish the listing in marketplace
-		publish_listing(listing, type, scraper)
+		isPublished = publish_listing(listing, type, scraper)
+
+		# If the listing is not published from the first time, try again
+		if not isPublished:
+			publish_listing(listing, type, scraper)
 
 def remove_listing(data, listing_type, scraper) :
 	title = generate_title_for_listing_type(data, listing_type)
@@ -38,8 +42,17 @@ def remove_listing(data, listing_type, scraper) :
 	scraper.element_wait_to_be_invisible('div[aria-label="Your Listing"]')
 
 def publish_listing(data, listing_type, scraper):
-	# Click on create new listing button
-	scraper.element_click('div[aria-label="Marketplace sidebar"] a[aria-label="Create new listing"]')
+	create_listing_button_selector = 'div[aria-label="Marketplace sidebar"] a[aria-label="Create new listing"]'
+	create_listing_button = scraper.find_element(create_listing_button_selector, False, 20)
+
+	if create_listing_button:
+		# Click on create new listing button
+		scraper.element_click(create_listing_button_selector)
+	else:
+		# Refresh marketplace selling page
+		scraper.go_to_page('https://facebook.com/marketplace/you/selling')
+		scraper.element_click(create_listing_button_selector)
+
 	# Choose listing type
 	scraper.element_click('a[href="/marketplace/create/' + listing_type + '/"]')
 
@@ -65,16 +78,29 @@ def publish_listing(data, listing_type, scraper):
 		scraper.element_click(next_button_selector)
 		# Add listing to multiple groups
 		add_listing_to_multiple_groups(data, scraper)
+	
+	close_button_selector = '//span[text()="Close"]'
+	close_button = scraper.find_element_by_xpath(close_button_selector, False, 10)
+	if close_button:
+		scraper.element_click_by_xpath(close_button_selector)
+		scraper.go_to_page('https://facebook.com/marketplace/you/selling')
+		return False
 
 	# Publish the listing
 	scraper.element_click('div[aria-label="Publish"]:not([aria-disabled])')
-	scraper.element_click_by_xpath('//div[@tabindex="0"] //span[text()="Leave Page"]')
+
+	leave_page_selector = '//div[@tabindex="0"] //span[text()="Leave Page"]'
+	leave_page = scraper.find_element_by_xpath(leave_page_selector, False, 15)
+	if leave_page:
+		scraper.element_click_by_xpath(leave_page_selector)
 
 	# Wait until the listing is published
 	wait_until_listing_is_published(listing_type, scraper)
 
 	if not next_button:
 		post_listing_to_multiple_groups(data, listing_type, scraper)
+	
+	return True
 
 
 def generate_multiple_images_path(path, images):
